@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src:/app/src
+      - /app/target
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/entities
+      SPRING_DATASOURCE_USERNAME: auction
+      SPRING_DATASOURCE_PASSWORD: Auction@2024
+      SPRING_DEVTOOLS_RESTART_ENABLED: "true"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: entities
+      POSTGRES_USER: auction
+      POSTGRES_PASSWORD: Auction@2024
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+
