@@ -1,5 +1,6 @@
 package com.auction.entities.services;
 
+import com.auction.entities.dtos.OlxAdKafkaRecordDTO;
 import com.auction.entities.dtos.OlxAdRecordDTO;
 import com.auction.entities.models.OlxAd;
 import com.auction.entities.repositories.OlxAdRepository;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -66,5 +68,21 @@ public class OlxAdService {
     public Page<OlxAd> getAllOlxAdsPaginated(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return olxAdRepository.findAll(pageable);
+    }
+
+    public OlxAd createOlxAdFromKafka(OlxAdKafkaRecordDTO olxAdKafkaRecordDTO) {
+        OlxAd olxAd = new OlxAd(
+                null,
+                olxAdKafkaRecordDTO.price(),
+                olxAdKafkaRecordDTO.url(),
+                LocalDateTime.now(),
+                null,
+                olxAdKafkaRecordDTO.publishedAt(),
+                olxAdKafkaRecordDTO.city(),
+                olxAdKafkaRecordDTO.state(),
+                olxAdKafkaRecordDTO.isActive()
+        );
+
+        return olxAdRepository.save(olxAd);
     }
 }
