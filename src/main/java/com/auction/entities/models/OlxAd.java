@@ -26,7 +26,7 @@ public class OlxAd {
     private BigDecimal price;
 
     @NonNull
-    @Column(length = 500)
+    @Column(length = 500, unique = true)
     private String url;
 
     private LocalDateTime createdAt;
