@@ -39,7 +39,6 @@ public class KafkaEntitiesConsumer {
     @KafkaListener(topics = "unvisitedUrls", groupId = "entities")
     public void checkUnvisitedUrlsEvent(String message) {
         try {
-            System.out.println(message);
             UnvisitedUrlsRecordDTO requestDTO = objectMapper.readValue(message, UnvisitedUrlsRecordDTO.class);
             List<String> unvisitedUrls = olxAdService.getUnvisitedUrls(requestDTO.urlsToCheck());
 

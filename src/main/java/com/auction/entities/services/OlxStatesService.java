@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,5 +33,21 @@ public class OlxStatesService {
         } else {
             return null;
         }
+    }
+
+    public String getCorrectNextState() {
+        List<OlxStates> olxStates = olxStatesRepository.findAll();
+
+        for (OlxStates olxState : olxStates) {
+            if (olxState.getLastCrawled() == null) {
+                return olxState.getUrl();
+            }
+        }
+
+        OlxStates oldestCrawledState = olxStates.stream()
+                .min(Comparator.comparing(OlxStates::getLastCrawled))
+                .orElseThrow(() -> new IllegalStateException("No OlxStates found"));
+
+        return oldestCrawledState.getUrl();
     }
 }
