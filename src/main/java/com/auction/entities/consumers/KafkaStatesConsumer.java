@@ -23,6 +23,7 @@ public class KafkaStatesConsumer {
 
     @KafkaListener(topics = "getNextState", groupId = "states")
     public void getNextStateEvent(String message) {
+        System.out.println("Received getNextState event with message: " + message);
         try {
             OlxStatesKafkaRecordDTO requestDTO = objectMapper.readValue(message, OlxStatesKafkaRecordDTO.class);
             String nextState = olxStatesService.getCorrectNextState();
