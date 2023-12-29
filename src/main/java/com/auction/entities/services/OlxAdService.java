@@ -11,8 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OlxAdService {
@@ -84,5 +84,18 @@ public class OlxAdService {
         );
 
         return olxAdRepository.save(olxAd);
+    }
+
+    public List<String> getUnvisitedUrls(List<String> urls) {
+        Set<String> unvisitedUrls = new HashSet<>(urls);
+        int batchSize = 500;
+
+        for (int i = 0; i < urls.size(); i += batchSize) {
+            List<String> batch = urls.subList(i, Math.min(urls.size(), i + batchSize));
+            List<OlxAd> visitedAds = olxAdRepository.findByUrlIn(batch);
+            visitedAds.forEach(ad -> unvisitedUrls.remove(ad.getUrl()));
+        }
+
+        return new ArrayList<>(unvisitedUrls);
     }
 }
