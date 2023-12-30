@@ -39,4 +39,14 @@ public class KafkaStatesConsumer {
             System.out.println("Error processing message: " + e.getMessage());
         }
     }
+
+    @KafkaListener(topics = "updateLastState", groupId = "states")
+    public void updateLastStateEvent(String lastCrawlerUrl) {
+        System.out.println("Received updateLastState event with message: " + lastCrawlerUrl);
+        try {
+            olxStatesService.updateLastCrawled(lastCrawlerUrl);
+        } catch (Exception e) {
+            System.out.println("Error processing message: " + e.getMessage());
+        }
+    }
 }

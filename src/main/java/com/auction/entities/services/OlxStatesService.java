@@ -24,15 +24,15 @@ public class OlxStatesService {
         return olxStatesRepository.findAll();
     }
 
-    public OlxStates updateLastCrawled(UUID id, LocalDateTime lastCrawled) {
-        Optional<OlxStates> olxStateOptional = olxStatesRepository.findById(id);
-        if (olxStateOptional.isPresent()) {
-            OlxStates olxState = olxStateOptional.get();
-            olxState.setLastCrawled(lastCrawled);
-            return olxStatesRepository.save(olxState);
-        } else {
-            return null;
+    public OlxStates updateLastCrawled(String url) {
+        Optional<OlxStates> olxState = olxStatesRepository.findByUrl(url);
+
+        if (olxState.isPresent()) {
+            olxState.get().setLastCrawled(LocalDateTime.now());
+            return olxStatesRepository.save(olxState.get());
         }
+
+        return null;
     }
 
     public String getCorrectNextState() {
